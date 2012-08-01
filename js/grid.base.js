@@ -957,8 +957,8 @@ $.fn.jqGrid = function( pin ) {
 		if (isMSIE && $.browser.version <= 6) {
 			ii = '<iframe style="display:block;position:absolute;z-index:-1;filter:Alpha(Opacity=\'0\');" src="javascript:false;"></iframe>';
 		} else { ii="";}
-		$("<div class='ui-widget-overlay jqgrid-overlay' id='lui_"+this.id+"'></div>").append(ii).insertBefore(gv);
-		$("<div class='loading ui-state-default ui-state-active' id='load_"+this.id+"'>"+this.p.loadtext+"</div>").insertBefore(gv);
+		$("<div class='ui-widget-overlay jqgrid-overlay'></div>").attr('id', 'lui_' + this.id).append(ii).insertBefore(gv);
+		$("<div class='loading ui-state-default ui-state-active'>"+this.p.loadtext+"</div>").attr('id', 'load_' + this.id).insertBefore(gv);
 		$(this).attr({cellspacing:"0",cellpadding:"0",border:"0","role":"grid","aria-multiselectable":!!this.p.multiselect,"aria-labelledby":"gbox_"+this.id});
 		var sortkeys = ["shiftKey","altKey","ctrlKey"],
 		intNum = function(val,defval) {
@@ -2279,7 +2279,7 @@ $.fn.jqGrid = function( pin ) {
 			ts.p.width = pw > 0?  pw: 'nw';
 		}
 		setColWidth();
-		$(eg).css("width",grid.width+"px").append("<div class='ui-jqgrid-resize-mark' id='rs_m"+ts.p.id+"'>&#160;</div>");
+		$(eg).css("width",grid.width+"px").append($("<div class='ui-jqgrid-resize-mark'>&#160;</div>").attr('id', 'rs_m' + ts.p.id));
 		$(gv).css("width",grid.width+"px");
 		thead = $("thead:first",ts).get(0);
 		var	tfoot = "";
@@ -2350,7 +2350,10 @@ $.fn.jqGrid = function( pin ) {
 		this.appendChild(tbody);
 		$(this).addClass('ui-jqgrid-btable').append(firstr);
 		firstr = null;
-		var hTable = $("<table class='ui-jqgrid-htable' style='width:"+ts.p.tblwidth+"px' role='grid' aria-labelledby='gbox_"+this.id+"' cellspacing='0' cellpadding='0' border='0'></table>").append(thead),
+		var hTable = $("<table class='ui-jqgrid-htable' role='grid' cellspacing='0' cellpadding='0' border='0'></table>")
+						.css('width', ts.p.tblwidth + 'px')
+						.attr('aria-labelledby', 'gbox_' + this.id)
+						.append(thead),
 		hg = (ts.p.caption && ts.p.hiddengrid===true) ? true : false,
 		hb = $("<div class='ui-jqgrid-hbox" + (dir=="rtl" ? "-rtl" : "" )+"'></div>");
 		thead = null;
@@ -2591,10 +2594,12 @@ $.fn.jqGrid = function( pin ) {
 			if(grid.resizing){grid.dragMove(e);return false;}
 		});
 		$(".ui-jqgrid-labels",grid.hDiv).bind("selectstart", function () { return false; });
-		$(document).mouseup(function () {
+		
+		ts.documentMouseup = function () {
 			if(grid.resizing) {	grid.dragEnd(); return false;}
 			return true;
-		});
+		};
+		$(document).mouseup(ts.documentMouseup);
 		ts.formatCol = formatCol;
 		ts.sortData = sortData;
 		ts.updatepager = updatepager;
@@ -2608,10 +2613,9 @@ $.fn.jqGrid = function( pin ) {
 		ts.addJSONData = function(d) {addJSONData(d,ts.grid.bDiv);};
 		this.grid.cols = this.rows[0].cells;
 
-		populate();ts.p.hiddengrid=false;
-		$(window).unload(function () {
-			ts = null;
-		});
+		// Memory leak (at least in Opera)
+		populate();
+		ts.p.hiddengrid=false;
 	});
 };
 $.jgrid.extend({
