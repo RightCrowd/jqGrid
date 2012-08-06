@@ -2176,7 +2176,6 @@ $.fn.jqGrid = function( pin ) {
 		ts.addJSONData = function(d) {addJSONData(d,ts.grid.bDiv);};
 		this.grid.cols = this.rows[0].cells;
 
-		// Memory leak (at least in Opera)
 		populate();
 		ts.p.hiddengrid=false;
 	});
