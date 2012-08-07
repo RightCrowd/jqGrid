@@ -30,7 +30,7 @@ task init() {
 
 task jqgrid(dependsOn: 'init') {
     description = "Concatinate all javascript files into one javascript file: $jqGridFile.absolutePath"
-    def files = fileTree(dir: srcdir, include: '*.js')
+    def files = fileTree(dir: srcdir, include: '*.js', exclude: 'JsonXml.js')
     inputs.file files
     outputs.file jqGridFile
 
@@ -59,7 +59,7 @@ task 'jqgrid-min'(dependsOn: 'jqgrid') {
 task 'min-files'(dependsOn: 'init') {
     def minDir = new File(distdir, 'min')
     description = "Minimize all javascript files to $minDir.absolutePath"
-    def files = fileTree(dir: srcdir, include: '*.js')
+    def files = fileTree(dir: srcdir, include: '*.js', exclude: 'JsonXml.js')
     inputs.file files
     outputs.dir minDir
 
