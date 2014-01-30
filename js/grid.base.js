@@ -2394,8 +2394,8 @@ $.jgrid.extend({
 			if( $t.p.altRows === true && success ) {
 				var cn = $t.p.altclass;
 				$($t.rows).each(function(i){
-					if(i % 2 ==1) { $(this).addClass(cn); }
-					else { $(this).removeClass(cn); }
+					if(i % 2 == 1) { $(this).removeClass(cn); }
+					else { $(this).addClass(cn); }
 				});
 			}
 		});
@@ -2558,8 +2558,8 @@ $.jgrid.extend({
 						if ((t.rows.length-1)%2 == 1)  {$(t.rows[t.rows.length-1]).addClass(cn);}
 					} else {
 						$(t.rows).each(function(i){
-							if(i % 2 ==1) { $(this).addClass(cn); }
-							else { $(this).removeClass(cn); }
+							if(i % 2 == 1) { $(this).removeClass(cn); }
+							else { $(this).addClass(cn); }
 						});
 					}
 				}
